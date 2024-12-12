@@ -28,7 +28,7 @@ fn main() {
             }
             ["exit", "0"] => {
                 println!("Exiting...");
-                return; // Replace with `break` if in a loop
+                break;
             }
             _ => {
                 println!("{}: command not found", input.trim());
