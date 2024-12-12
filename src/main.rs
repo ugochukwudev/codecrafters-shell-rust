@@ -11,9 +11,28 @@ fn main() {
         let stdin = io::stdin();
         let mut input = String::new();
         stdin.read_line(&mut input).unwrap();
-        match input.trim().to_lowercase().as_str() {
-            "exit 0" => break,
-            _ => println!("{}: command not found", input.trim()),
+        match input
+            .trim()
+            .to_lowercase()
+            .as_str()
+            .split_whitespace()
+            .collect::<Vec<_>>()
+            .as_slice()
+        {
+            ["echo", rest @ ..] => {
+                if !rest.is_empty() {
+                    println!("{}", rest.join(" "));
+                } else {
+                    println!("No additional arguments provided for echo.");
+                }
+            }
+            ["exit", "0"] => {
+                println!("Exiting...");
+                return; // Replace with `break` if in a loop
+            }
+            _ => {
+                println!("{}: command not found", input.trim());
+            }
         }
     }
 }
