@@ -27,7 +27,6 @@ fn main() {
                 }
             }
             ["exit", "0"] => {
-                println!("Exiting...");
                 break;
             }
             _ => {
