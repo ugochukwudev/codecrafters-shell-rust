@@ -20,13 +20,10 @@ fn main() {
             continue;
         }
 
-        match trimmed_input
-            .to_lowercase()
-            .as_str()
-            .split_whitespace()
-            .collect::<Vec<_>>()
-            .as_slice()
-        {
+        // Split input into parts without altering the case
+        let parts: Vec<&str> = trimmed_input.split_whitespace().collect();
+
+        match parts.as_slice() {
             ["echo", rest @ ..] => {
                 if !rest.is_empty() {
                     println!("{}", rest.join(" "));
@@ -53,16 +50,13 @@ fn main() {
                     }
                 }
             }
-            command_parts => {
+            [program, args @ ..] => {
                 // Handle external commands
-                let program = command_parts[0];
-                let args = &command_parts[1..];
-
                 match Command::new(program).args(args).output() {
                     Ok(output) => {
                         // Print stdout of the command
                         if !output.stdout.is_empty() {
-                            println!("{}", String::from_utf8_lossy(&output.stdout));
+                            print!("{}", String::from_utf8_lossy(&output.stdout));
                         }
                         // Print stderr of the command, if any
                         if !output.stderr.is_empty() {
@@ -73,6 +67,9 @@ fn main() {
                         println!("Error executing {}: {}", program, e);
                     }
                 }
+            }
+            _ => {
+                println!("{}: command not found", trimmed_input);
             }
         }
     }
