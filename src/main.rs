@@ -1,10 +1,11 @@
 #[allow(unused_imports)]
 use std::io::{self, Write};
+use std::process::Command;
 
 fn main() {
     let _commands: [&str; 3] = ["echo", "exit", "type"];
     let path_env = std::env::var("PATH").unwrap();
-    // Uncomment this block to pass the first stage
+
     loop {
         print!("$ ");
         io::stdout().flush().unwrap();
@@ -13,8 +14,13 @@ fn main() {
         let stdin = io::stdin();
         let mut input = String::new();
         stdin.read_line(&mut input).unwrap();
-        match input
-            .trim()
+        let trimmed_input = input.trim();
+
+        if trimmed_input.is_empty() {
+            continue;
+        }
+
+        match trimmed_input
             .to_lowercase()
             .as_str()
             .split_whitespace()
@@ -28,37 +34,45 @@ fn main() {
                     println!("No additional arguments provided for echo.");
                 }
             }
-            ["exit", "0"] => {
+            ["exit"] | ["exit", "0"] => {
                 break;
             }
-            ["type", rest] => {
-                if _commands.contains(rest) {
-                    println!("{} is a shell builtin", rest);
+            ["type", command] => {
+                if _commands.contains(command) {
+                    println!("{} is a shell builtin", command);
                 } else {
-                    let split = &mut path_env.split(':');
-                    if let Some(path) =
-                        split.find(|path| std::fs::metadata(format!("{}/{}", path, rest)).is_ok())
+                    let path_separator = if cfg!(windows) { ";" } else { ":" };
+                    let mut path_dirs = path_env.split(path_separator);
+
+                    if let Some(path) = path_dirs
+                        .find(|dir| std::fs::metadata(format!("{}/{}", dir, command)).is_ok())
                     {
-                        println!("{rest} is {path}/{rest}");
+                        println!("{command} is {path}/{command}");
                     } else {
-                        println!("{rest}: not found");
+                        println!("{command}: not found");
                     }
                 }
             }
-            [first, second] => {
-                let split = &mut path_env.split(' ');
-                if let Some(path) =
-                    split.find(|path| std::fs::metadata(format!("{}/{}", path, first)).is_ok())
-                {
-                    let digit = first.split("_");
-                    println!("Hello {second}! The secret code is {:?}.", digit);
-                } else {
-                    println!("{first}: not found");
+            command_parts => {
+                // Handle external commands
+                let program = command_parts[0];
+                let args = &command_parts[1..];
+
+                match Command::new(program).args(args).output() {
+                    Ok(output) => {
+                        // Print stdout of the command
+                        if !output.stdout.is_empty() {
+                            println!("{}", String::from_utf8_lossy(&output.stdout));
+                        }
+                        // Print stderr of the command, if any
+                        if !output.stderr.is_empty() {
+                            eprintln!("{}", String::from_utf8_lossy(&output.stderr));
+                        }
+                    }
+                    Err(e) => {
+                        println!("Error executing {}: {}", program, e);
+                    }
                 }
-                println!("{}", first);
-            }
-            _ => {
-                println!("{}: command not found", input.trim());
             }
         }
     }
