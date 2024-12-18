@@ -61,9 +61,6 @@ fn main() {
                 match Command::new(program).args(args).output() {
                     Ok(output) => {
                         // Print stdout of the command
-                        if !output.stdout.is_empty() {
-                            println!("{}", String::from_utf8_lossy(&output.stdout));
-                        }
                     }
                     Err(e) => {
                         println!("Error executing {}: {}", program, e);
