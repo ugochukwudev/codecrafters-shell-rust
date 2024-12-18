@@ -64,10 +64,6 @@ fn main() {
                         if !output.stdout.is_empty() {
                             println!("{}", String::from_utf8_lossy(&output.stdout));
                         }
-                        // Print stderr of the command, if any
-                        if !output.stderr.is_empty() {
-                            eprintln!("{}", String::from_utf8_lossy(&output.stderr));
-                        }
                     }
                     Err(e) => {
                         println!("Error executing {}: {}", program, e);
