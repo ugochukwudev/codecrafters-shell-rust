@@ -2,6 +2,7 @@
 use std::io::{self, Write};
 
 fn main() {
+    let _commands: [&str; 2] = ["echo", "exit"];
     // Uncomment this block to pass the first stage
     loop {
         print!("$ ");
@@ -28,6 +29,13 @@ fn main() {
             }
             ["exit", "0"] => {
                 break;
+            }
+            ["type", rest] => {
+                if _commands.contains(rest) {
+                    println!("{} is a shell builtin", rest);
+                } else {
+                    println!("{}: not found", rest);
+                }
             }
             _ => {
                 println!("{}: command not found", input.trim());
