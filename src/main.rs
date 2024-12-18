@@ -64,7 +64,7 @@ fn main() {
                         }
                     }
                     Err(e) => {
-                        println!("Error executing {}: {}", program, e);
+                        println!("{}: command not found", program);
                     }
                 }
             }
