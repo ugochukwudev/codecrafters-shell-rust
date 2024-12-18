@@ -3,6 +3,7 @@ use std::io::{self, Write};
 
 fn main() {
     let _commands: [&str; 3] = ["echo", "exit", "type"];
+    let path_env = std::env::var("PATH").unwrap();
     // Uncomment this block to pass the first stage
     loop {
         print!("$ ");
@@ -34,7 +35,14 @@ fn main() {
                 if _commands.contains(rest) {
                     println!("{} is a shell builtin", rest);
                 } else {
-                    println!("{}: not found", rest);
+                    let split = &mut path_env.split(':');
+                    if let Some(path) =
+                        split.find(|path| std::fs::metadata(format!("{}/{}", path, rest)).is_ok())
+                    {
+                        println!("{rest} is {path}/{rest}");
+                    } else {
+                        println!("{rest} not found");
+                    }
                 }
             }
             _ => {
