@@ -4,7 +4,7 @@ use std::io::{self, Write};
 use std::process::Command;
 
 fn main() {
-    let _commands: [&str; 3] = ["echo", "exit", "type"];
+    let _commands: [&str; 4] = ["echo", "exit", "type", "pwd"];
     let path_env = std::env::var("PATH").unwrap();
 
     loop {
