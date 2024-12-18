@@ -1,3 +1,4 @@
+use std::env;
 #[allow(unused_imports)]
 use std::io::{self, Write};
 use std::process::Command;
@@ -50,6 +51,10 @@ fn main() {
                     }
                 }
             }
+            ["pwd"] => match env::current_dir() {
+                Ok(path) => println!("{}", path.display()),
+                Err(e) => eprintln!("Error getting current working directory: {}", e),
+            },
             [program, args @ ..] => {
                 // Handle external commands
                 match Command::new(program).args(args).output() {
