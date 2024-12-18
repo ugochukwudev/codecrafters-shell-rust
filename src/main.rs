@@ -2,7 +2,7 @@
 use std::io::{self, Write};
 
 fn main() {
-    let _commands: [&str; 2] = ["echo", "exit"];
+    let _commands: [&str; 3] = ["echo", "exit", "type"];
     // Uncomment this block to pass the first stage
     loop {
         print!("$ ");
