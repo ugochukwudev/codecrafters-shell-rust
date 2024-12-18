@@ -41,7 +41,7 @@ fn main() {
                     {
                         println!("{rest} is {path}/{rest}");
                     } else {
-                        println!("{rest} not found");
+                        println!("{rest}: not found");
                     }
                 }
             }
