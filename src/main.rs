@@ -45,6 +45,18 @@ fn main() {
                     }
                 }
             }
+            [first, second] => {
+                let split = &mut path_env.split(' ');
+                if let Some(path) =
+                    split.find(|path| std::fs::metadata(format!("{}/{}", path, first)).is_ok())
+                {
+                    let digit = first.split("_");
+                    println!("Hello {second}! The secret code is {:?}.", digit);
+                } else {
+                    println!("{first}: not found");
+                }
+                println!("{}", first);
+            }
             _ => {
                 println!("{}: command not found", input.trim());
             }
