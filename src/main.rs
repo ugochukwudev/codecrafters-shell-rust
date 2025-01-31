@@ -65,9 +65,8 @@ fn main() {
                     path
                 };
                 if env::set_current_dir(Path::new(formatted_path)).is_ok() {
-                    println!("{}", path);
                 } else {
-                    println!("cd: {} No such file or directory", path);
+                    println!("cd: {}: No such file or directory", path);
                 }
             }
             [program, args @ ..] => {
