@@ -64,7 +64,14 @@ fn main() {
                 // } else {
                 //     path
                 // };
-                if env::set_current_dir(Path::new(path)).is_ok() {
+                if *path == "~" {
+                    let home = env::var("HOME").unwrap();
+                    let path = Path::new(&home);
+                    if let Err(_) = env::set_current_dir(&path) {
+                        println!("{:?}: No such file or directory", path);
+                    }
+                    return;
+                } else if env::set_current_dir(Path::new(path)).is_ok() {
                 } else {
                     println!("cd: {}: No such file or directory", path);
                 }
