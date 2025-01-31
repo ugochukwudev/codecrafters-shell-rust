@@ -59,12 +59,12 @@ fn main() {
                 Err(e) => eprintln!("Error getting current working directory: {}", e),
             },
             ["cd", path] => {
-                let formatted_path = if path.starts_with('/') {
-                    &path[1..]
-                } else {
-                    path
-                };
-                if env::set_current_dir(Path::new(formatted_path)).is_ok() {
+                // let formatted_path = if path.starts_with('/') {
+                //     &path[1..]
+                // } else {
+                //     path
+                // };
+                if env::set_current_dir(Path::new(path)).is_ok() {
                 } else {
                     println!("cd: {}: No such file or directory", path);
                 }
