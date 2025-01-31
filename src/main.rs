@@ -1,7 +1,10 @@
-use std::env;
 #[allow(unused_imports)]
 use std::io::{self, Write};
 use std::process::Command;
+use std::{
+    env,
+    path::{self, Path},
+};
 
 fn main() {
     let _commands: [&str; 4] = ["echo", "exit", "type", "pwd"];
@@ -55,6 +58,18 @@ fn main() {
                 Ok(path) => println!("{}", path.display()),
                 Err(e) => eprintln!("Error getting current working directory: {}", e),
             },
+            ["cd", path] => {
+                let formatted_path = if path.starts_with('/') {
+                    &path[1..]
+                } else {
+                    path
+                };
+                if env::set_current_dir(Path::new(formatted_path)).is_ok() {
+                    println!("{}", path);
+                } else {
+                    println!("cd: {} No such file or directory", path);
+                }
+            }
             [program, args @ ..] => {
                 // Handle external commands
                 match Command::new(program).args(args).output() {
