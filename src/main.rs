@@ -70,7 +70,6 @@ fn main() {
                     if let Err(_) = env::set_current_dir(&path) {
                         println!("{:?}: No such file or directory", path);
                     }
-                    return;
                 } else if env::set_current_dir(Path::new(path)).is_ok() {
                 } else {
                     println!("cd: {}: No such file or directory", path);
