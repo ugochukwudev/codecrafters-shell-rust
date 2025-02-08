@@ -33,7 +33,7 @@ fn main() {
                     let first_char = rest[0].chars().next().unwrap();
                     if first_char == '"' || first_char == '\'' {
                         let mut quoted_string = rest.join(" ");
-                        quoted_string = quoted_string.trim_matches(first_char).to_string();
+                        quoted_string = quoted_string.replace(first_char, "").to_string();
                         println!("{}", quoted_string);
                     } else {
                         println!("{}", rest.join(" "));
